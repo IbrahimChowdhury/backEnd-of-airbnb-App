@@ -230,7 +230,7 @@ app.get("/users-places", (req, res) => {
 
         let { token } = req.cookies
         jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
-            let { id } = user
+            let id  = user.id
             res.json(await PlacesModel.find({ owner: id }))
         })
 
