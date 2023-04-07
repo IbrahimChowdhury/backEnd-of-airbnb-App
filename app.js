@@ -112,7 +112,7 @@ app.post("/login", async (req, res) => {
 
 // for profile getting the token from cookie and get the value of the token using jwt.varify() and the find the main user using that token information and send the information of the user
 app.get("/profile", async (req, res) => {
-    let { token } = req.cookies
+    let token  = req.cookies.token
     if (token) {
         jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
             let findUser= await usermodel.findById(user.id)
