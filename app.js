@@ -86,6 +86,7 @@ app.post("/login", async (req, res) => {
             if (result == true) {
 
                 let payload = {
+                    
                     email: user.email,
                     id: user._id
                 }
@@ -111,10 +112,14 @@ app.post("/login", async (req, res) => {
 app.get("/profile", async (req, res) => {
     let { token } = req.cookies
     if (token) {
-        jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
-            let findUser= await usermodel.findById(user.id)
+        try {
+            let user = await jwt.verify(token, process.env.jwt_secret)
+            let findUser = await usermodel.findById(user.id)
             res.json(findUser)
-        })
+        } catch (err) {
+            console.error(err)
+            res.status(401).json({ message: "Invalid token" })
+        }
     }
     else {
         res.json(null);
