@@ -1,7 +1,8 @@
+const { config } = require("dotenv")
 let app=require("./app")
-let port=4000
 let mongoose=require("mongoose")
 require("dotenv").config()
+let port=process.env.PORT || 5000
 
 
 mongoose.connect(process.env.db_url)
