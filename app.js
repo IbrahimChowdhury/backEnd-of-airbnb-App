@@ -22,7 +22,7 @@ app.use("/upload", express.static(__dirname + "/upload/"))
 
 app.use(cors({
     origin: "http://localhost:3000",
-    credentials: true
+    // credentials: true
 }))
 
 
@@ -110,16 +110,17 @@ app.post("/login", async (req, res) => {
 // for profile getting the token from cookie and get the value of the token using jwt.varify() and the find the main user using that token information and send the information of the user
 app.get("/profile", async (req, res) => {
     let { token } = req.cookies
-    if (token) {
-        jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
-            let findUser= await usermodel.findById(user.id)
-            res.json(findUser)
-        })
-    }
-    else {
-        res.json(null);
-    }
+    // if (token) {
+    //     jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
+    //         let findUser= await usermodel.findById(user.id)
+    //         res.json(findUser)
+    //     })
+    // }
+    // else {
+    //     res.json(null);
+    // }
  
+    res.send(token)
 })
 
 
