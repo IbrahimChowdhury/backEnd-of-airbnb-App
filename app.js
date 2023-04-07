@@ -120,7 +120,7 @@ app.get("/profile", async (req, res) => {
 
 // logout session .. after login if anyone click logOut then he or she will log out of the profile
 app.post("/logout", (req, res) => {
-    res.cookie("token", '').json(true)
+    res.cookie("token", '')
 })
 
 
