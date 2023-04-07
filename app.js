@@ -19,10 +19,10 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/upload", express.static(__dirname + "/upload/"))
 
+app.use(cors())
 
 app.use(cors({
     origin: "http://localhost:3000",
-    credentials: false
 }))
 
 
