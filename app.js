@@ -107,8 +107,8 @@ app.get("/profile", async (req, res) => {
     let { token } = req.cookies
     if (token) {
         jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
-            let {name,email,_id} = await usermodel.findById(user.id)
-            res.json({name,email,_id})
+            
+            res.send( await usermodel.findById({_id:user.id}))
         })
     }
     else {
