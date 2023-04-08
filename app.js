@@ -82,25 +82,25 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
     let user = await usermodel.findOne({ email: req.body.email })
     if (user) {
-        bcrypt.compare(req.body.password, user.password, function (err, result) {
+        const result=  bcrypt.compareSync(req.body.password, user.password)
             // result == true
-            if (result == true) {
+            if (result) {
 
                 let payload = {
                     name:user.name,
                     email: user.email,
                     id: user._id
                 }
-                let token = jwt.sign(payload, process.env.jwt_secret, {
-                    expiresIn: "2d"
-                })
+                jwt.sign(payload, process.env.jwt_secret,{},(err,token)=>{
+                    if(err) throw err;
+                    res.cookie("token", token).json(user)
+                } )
 
-                res.cookie("token", token,  { httpOnly: true, maxAge: 86400000 }).send("password is ok")
             }
             else {
                 res.send("password is not ok")
             }
-        });
+        
     }
 
     else {
