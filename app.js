@@ -204,7 +204,13 @@ const upload = multer({ storage: storage });
 
 app.post("/upload", upload.single("photo"), (req, res) => {
     let name = req.file.filename
-    res.json(name)
+    if(name)
+    {
+        res.json(name)
+    }
+    else{
+        res.json(null)
+    }
 })
 
 // creating a  new places
