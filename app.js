@@ -91,7 +91,7 @@ app.post("/login", async (req, res) => {
                     name:user.name,
                     email: user.email,
                     id: user._id
-                }, process.env.jwt_secret,{},(err,token)=>{
+                }, process.env.jwt_secret,{expiresIn:"2d"},(err,token)=>{
                     if(err) throw err;
                     res.cookie("token", token,  { httpOnly: true, maxAge: 86400000 }).json(user)
                 } )
