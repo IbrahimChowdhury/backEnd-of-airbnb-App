@@ -93,7 +93,7 @@ app.post("/login", async (req, res) => {
                     id: user._id
                 }, process.env.jwt_secret,{expiresIn:"2d"},(err,token)=>{
                     if(err) throw err;
-                    res.cookie("token", token,  { httpOnly: true, maxAge: 86400000 }).json(user)
+                    res.cookie("token", token,  { httpOnly: true,origin:"https://airbnbhotels.up.railway.app", maxAge: 86400000 }).json(user)
                 } )
 
             }
