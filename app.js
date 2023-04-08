@@ -95,7 +95,7 @@ app.post("/login", async (req, res) => {
                     expiresIn: "2d"
                 })
 
-                res.cookie("token", token).send("password is ok")
+                res.cookie("token", token,  { httpOnly: true, maxAge: 86400000 }).send("password is ok")
             }
             else {
                 res.send("password is not ok")
