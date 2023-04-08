@@ -86,12 +86,12 @@ app.post("/login", async (req, res) => {
             // result == true
             if (result) {
 
-                let payload = {
+               
+                jwt.sign({
                     name:user.name,
                     email: user.email,
                     id: user._id
-                }
-                jwt.sign(payload, process.env.jwt_secret,{},(err,token)=>{
+                }, process.env.jwt_secret,{},(err,token)=>{
                     if(err) throw err;
                     res.cookie("token", token).json(user)
                 } )
