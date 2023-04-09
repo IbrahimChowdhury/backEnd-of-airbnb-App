@@ -47,12 +47,9 @@ let getUserFromReqToken=(req)=>{
         {
             jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
                 if(!user) {
-                    reject(new Error("Invalid Token"))
+                  return  resolve(null)
                 }
-                else if(err)
-                {
-                    reject(err)
-                }
+              
                 else{
                     return resolve(user)
                 }
@@ -375,13 +372,21 @@ app.post("/bookings", async(req,res)=>{
     let { 
         place,checkIn,checkOut,maxGuest,name,mobileNo,price,}=req.body
      
-    bookingModel.create({
-       userId:user.id, place,checkIn,checkOut,maxGuest,name,mobileNo,price
-    }).then((doc)=>{
-        res.json(doc)
-    }).catch((err)=>{
-        throw err
-    })
+        if(user)
+        {
+            bookingModel.create({
+               userId:user.id, place,checkIn,checkOut,maxGuest,name,mobileNo,price
+            }).then((doc)=>{
+                res.json(doc)
+            }).catch((err)=>{
+                throw err
+            })
+        }
+        else 
+        {
+            res.json(null)
+        }
+
 })
 
 
