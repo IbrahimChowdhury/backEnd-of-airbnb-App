@@ -375,13 +375,19 @@ app.post("/bookings", async(req,res)=>{
      
         if(user)
         {
-            bookingModel.create({
-               userId:user.id, place,checkIn,checkOut,maxGuest,name,mobileNo,price
-            }).then((doc)=>{
-                res.json(doc)
-            }).catch((err)=>{
-                throw err
-            })
+            if(place!==null && checkIn!==null && checkOut!==null && maxGuest!==null && name!==null && mobileNo!=null && price!==null)
+            {
+                bookingModel.create({
+                   userId:user.id, place,checkIn,checkOut,maxGuest,name,mobileNo,price
+                }).then((doc)=>{
+                    res.json(doc)
+                }).catch((err)=>{
+                    throw err
+                })
+            }
+            else{
+                res.json("please fill up all the section")
+            }
         }
         else 
         {
