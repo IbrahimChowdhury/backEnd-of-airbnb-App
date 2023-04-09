@@ -22,8 +22,8 @@ app.use("/upload", express.static(__dirname + "/upload/"))
 
 
 app.use(cors({
-    // origin: "https://airbnb-hotel-management-app.netlify.app",
-    origin: "http://localhost:3000",
+    origin: "https://airbnb-hotel-management-app.netlify.app",
+    // origin: "http://localhost:3000",
     credentials:true
 }))
 
