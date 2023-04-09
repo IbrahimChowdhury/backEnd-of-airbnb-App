@@ -38,13 +38,26 @@ app.get("/test", (req, res) => {
 // get the user who is logged into the website
 let getUserFromReqToken=(req)=>{
     return new Promise((resolve,reject)=>{
-        
-        jwt.verify(req.cookies.token, process.env.jwt_secret, {}, async (err, user) => {
-            if(!user) {
-                throw err
-            }
-            return resolve(user)
-        })
+        let token=req.cookies.token
+        if(!token)
+        {
+            return resolve(null)
+        }
+        else
+        {
+            jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
+                if(!user) {
+                    reject(new Error("Invalid Token"))
+                }
+                else if(err)
+                {
+                    reject(err)
+                }
+                else{
+                    return resolve(user)
+                }
+            })
+        }
     })
 }
 
@@ -246,17 +259,26 @@ app.post("/places", (req, res) => {
 
         })
     }
+    else{
+        res.json(null)
+    }
 })
 
 // it get all the places that are created by a specific user
 app.get("/users-places", (req, res) => {
     try {
-
         let { token } = req.cookies
-        jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
-            let id  = user.id
-            res.json(await PlacesModel.find({ owner: id }))
-        })
+        if(token)
+        {
+            jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
+                let id  = user.id
+                res.json(await PlacesModel.find({ owner: id }))
+            })
+        }
+        else
+        {
+            res.json(null)
+        }
 
 
     } catch (error) {
@@ -267,14 +289,20 @@ app.get("/users-places", (req, res) => {
 // get the place that is contain the id 
 app.get("/account/places/:id", (req, res) => {
     let { token } = req.cookies
-    jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
-        let { id } = req.params
-        let userId = user.id
-        let findPlace = await PlacesModel.findById(id)
-        if (userId == findPlace.owner.toString()) {
-            res.json(findPlace)
-        }
-    })
+    if(token)
+    {
+        jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
+            let { id } = req.params
+            let userId = user.id
+            let findPlace = await PlacesModel.findById(id)
+            if (userId == findPlace.owner.toString()) {
+                res.json(findPlace)
+            }
+        })
+    }
+    else{
+        res.json(null)
+    }
 
 })
 
@@ -295,27 +323,32 @@ app.put("/places", async (req, res) => {
         maxGuest,
         price } = req.body
 
-
-    jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
-        let findPlace = await PlacesModel.findById(id)
-        if (user.id == findPlace.owner.toString()) {
-            findPlace.set({
-                title: title,
-                address: address,
-                photos: addedPhotos,
-                description: description,
-                perks: perks,
-                extraInfo: extraInfo,
-                checkIn: checkIn,
-                checkOut: checkOut,
-                maxGuests: maxGuest,
-                price: price
-
+        if(token)
+        {
+            jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
+                let findPlace = await PlacesModel.findById(id)
+                if (user.id == findPlace.owner.toString()) {
+                    findPlace.set({
+                        title: title,
+                        address: address,
+                        photos: addedPhotos,
+                        description: description,
+                        perks: perks,
+                        extraInfo: extraInfo,
+                        checkIn: checkIn,
+                        checkOut: checkOut,
+                        maxGuests: maxGuest,
+                        price: price
+        
+                    })
+                    await findPlace.save()
+                    res.json("ok")
+                }
             })
-            await findPlace.save()
-            res.json("ok")
         }
-    })
+        else{
+            res.json(null)
+        }
 })
 
 
@@ -357,7 +390,13 @@ app.post("/bookings", async(req,res)=>{
 app.get("/bookings",async(req,res)=>{
     
     let user=await getUserFromReqToken(req)
-    res.json(await bookingModel.find({userId:user.id}).populate('place'))
+    if(user)
+    {
+        res.json(await bookingModel.find({userId:user.id}).populate('place'))
+    }
+    else{
+        res.json(null)
+    }
     
 })
 
