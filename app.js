@@ -127,6 +127,7 @@ app.get("/profile", async (req, res) => {
         jwt.verify(token, process.env.jwt_secret, {}, async (err, user) => {
             let findUser= await usermodel.findById(user.id)
             res.json(findUser)
+            
         })
     }
     else {
